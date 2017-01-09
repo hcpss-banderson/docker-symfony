@@ -23,16 +23,22 @@ RUN apt-get update && apt-get install -y \
 
 COPY config/php.ini /usr/local/etc/php/
 
-# Install
+# Install composer and symfony
 RUN a2enmod rewrite \
 	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
 	&& mv composer.phar /usr/local/bin/composer \
-    && wget https://github.com/bander2/twit/releases/download/1.1.0/twit-linux-amd64 -O /usr/local/bin/twit \
-    && chmod u+x /usr/local/bin/twit \
-    && curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony \
-    && chmod a+x /usr/local/bin/symfony
+	&& wget https://github.com/bander2/twit/releases/download/1.1.0/twit-linux-amd64 -O /usr/local/bin/twit \
+	&& chmod u+x /usr/local/bin/twit \
+	&& curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony \
+	&& chmod a+x /usr/local/bin/symfony
+
+# Install Bower
+RUN apt-get update && apt-get install -y \
+		npm nodejs \
+	&& apt-get clean \
+	&& npm install -g bower
 
 RUN mkdir -p /var/www/symfony/web
 
