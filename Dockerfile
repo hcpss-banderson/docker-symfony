@@ -38,7 +38,9 @@ RUN a2enmod rewrite \
 RUN apt-get update && apt-get install -y \
 		npm nodejs \
 	&& apt-get clean \
-	&& npm install -g bower
+	&& npm install -g bower \
+	&& ln -s $(which nodejs) /usr/local/bin/node \
+	&& echo '{ "allow_root": true }' > /root/.bowerrc
 
 RUN mkdir -p /var/www/symfony/web
 
