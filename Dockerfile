@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 		libapache2-mod-php \
 	&& apt-get clean
 
-COPY config/php.ini /usr/local/etc/php/
+COPY config/php.ini /etc/php/7.0/apache2/php.ini
 
 # Install composer and symfony
 RUN a2enmod rewrite \
