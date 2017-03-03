@@ -42,11 +42,11 @@ RUN apt-get update && apt-get install -y \
 	&& ln -s $(which nodejs) /usr/local/bin/node \
 	&& echo '{ "allow_root": true }' > /root/.bowerrc
 
-RUN mkdir -p /var/www/symfony/web
+RUN mkdir -p /var/www/symfony
 
 COPY config/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
-WORKDIR /var/www/symfony/web
+WORKDIR /var/www/symfony
 
 EXPOSE 80
 
