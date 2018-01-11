@@ -48,6 +48,10 @@ COPY config/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
 WORKDIR /var/www/symfony
 
+COPY docker-entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+
 EXPOSE 80
 
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
