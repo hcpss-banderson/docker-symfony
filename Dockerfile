@@ -1,9 +1,12 @@
-FROM ubuntu:artful
+FROM ubuntu:bionic
 
-RUN apt-get update && apt-get install -y \
+RUN export DEBIAN_FRONTEND=noninteractive \
+	&& apt-get update && apt-get install -y --no-install-recommends \
 		git \
 		zip \
 		xz-utils \
+		openssl \
+		ca-certificates \
 		curl \
 		wget \
 		php \
@@ -14,22 +17,24 @@ RUN apt-get update && apt-get install -y \
 		php-json \
 		php-intl \
 		php-mbstring \
-		php-mcrypt \
 		php-xml \
 		mysql-client \
 		apache2 \
 		libapache2-mod-php \
-	&& apt-get clean
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
 
-COPY config/php.ini /etc/php/7.1/apache2/php.ini
+COPY config/php.ini /etc/php/7.2/apache2/php.ini
 
 # Install composer and symfony
-RUN a2enmod rewrite \
-	&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-	&& php composer-setup.php \
-	&& php -r "unlink('composer-setup.php');" \
-	&& mv composer.phar /usr/local/bin/composer \
-	&& wget https://github.com/bander2/twit/releases/download/1.1.0/twit-linux-amd64 -O /usr/local/bin/twit \
+COPY install-composer.sh /install-composer.sh
+
+RUN a2enmod rewrite
+
+RUN /install-composer.sh \
+	&& mv composer.phar /usr/local/bin/composer
+
+RUN wget https://github.com/bander2/twit/releases/download/1.1.0/twit-linux-amd64 -O /usr/local/bin/twit \
 	&& chmod u+x /usr/local/bin/twit \
 	&& curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony \
 	&& chmod a+x /usr/local/bin/symfony
