@@ -13,6 +13,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 		php-cli \
 		php-curl \
 		php-gd \
+		php-zip \
 		php-mysql \
 		php-json \
 		php-intl \
@@ -25,27 +26,12 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	&& rm -rf /var/lib/apt/lists/*
 
 COPY config/php.ini /etc/php/7.2/apache2/php.ini
-
-# Install composer and symfony
-COPY install-composer.sh /install-composer.sh
-
 RUN a2enmod rewrite
 
+# Install composer
+COPY install-composer.sh /install-composer.sh
 RUN /install-composer.sh \
 	&& mv composer.phar /usr/local/bin/composer
-
-RUN wget https://github.com/bander2/twit/releases/download/1.1.0/twit-linux-amd64 -O /usr/local/bin/twit \
-	&& chmod u+x /usr/local/bin/twit \
-	&& curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony \
-	&& chmod a+x /usr/local/bin/symfony
-
-# Install Bower
-RUN apt-get update && apt-get install -y \
-		npm nodejs \
-	&& apt-get clean \
-	&& npm install -g bower gulp \
-	&& ln -s $(which nodejs) /usr/local/bin/node \
-	&& echo '{ "allow_root": true }' > /root/.bowerrc
 
 RUN mkdir -p /var/www/symfony
 
