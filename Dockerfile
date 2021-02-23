@@ -9,7 +9,6 @@ RUN install-php-extensions \
     apcu \
     zip \
     opcache \
-    mongodb \
     @composer \
   && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 
