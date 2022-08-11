@@ -1,4 +1,4 @@
-FROM php:7.4-apache-buster
+FROM php:8.1-apache-buster
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
@@ -26,6 +26,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     patch \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash \
+    && apt-get install symfony-cli
 
 RUN a2enmod rewrite
 COPY config/000-default.conf /etc/apache2/sites-enabled/000-default.conf
