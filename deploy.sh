@@ -3,7 +3,7 @@
 docker buildx create --use --name symfony_builder
 
 docker buildx build \
-    -t banderson/symfony:base \
+    -t banderson/symfony \
     --platform=linux/arm64,linux/amd64 \
     --push .
 

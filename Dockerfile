@@ -1,14 +1,21 @@
-FROM php:8.3-apache-bookworm
+ARG PHPVERSION=8.3
+FROM php:$PHPVERSION-apache-bookworm AS base
+
+ENV PATH="${PATH}:/var/www/drupal/vendor/bin"
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 RUN install-php-extensions \
+    bcmath \
     gd \
     pdo_mysql \
     intl \
     apcu \
     zip \
     opcache \
+    imap \
+    uploadprogress \
     @composer \
   && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 
